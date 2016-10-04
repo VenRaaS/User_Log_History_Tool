@@ -1,0 +1,45 @@
+﻿###  2016-03-24  工作記錄
+
+今天終於把
+(1)加入當天日期
+(2)用linux中的crontab完成每日自動化
+
+完成
+以下是一些心得與方法
+
+1.
+加入當天日期,主要是用
+DATE=$(date +"%Y%m%d" --date="today")
+取出當天日期
+然後再透過執行指令的後面加上 -hiveconf 傳入DATE變數
+執行指令的file中用${hiveconf:DATE}接收變數
+
+#切記:不要加上無謂的引號'或加號+ 因為linux中字串相加是不需要其他運算元的,放在一起就好
+
+2.
+用crontab加入排程的方法:
+step 1:用crontab -e 編輯排程
+step 2:再按i進入vim的編輯模式
+step 3:編輯完後按esc
+step 4:接著輸入:wq 按enter (表示write & quit)
+
+完成!!!
+*透過crontab -ls 可以看目前有的排程
+
+3.設定排程的格式
+ex:
+        20 15 * * * source home/W100.ITRI/u453041/demo_shell_script.sh 
+	 ^  ^	^     ^       ^
+表示:在	分 時  any   執行   script    
+                ˇ
+  		ˇ
+           (天、週、月)
+
+
+
+
+
+
+
+
+
