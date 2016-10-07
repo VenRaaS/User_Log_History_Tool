@@ -1,4 +1,4 @@
-## 分成momo和gohappy兩種版本 ##
+# 分成momo和gohappy兩種版本 #
 
 gohappy的有daily計算的script，也有batch計算的script
 
