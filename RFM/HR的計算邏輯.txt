@@ -1,0 +1,26 @@
+用晉升大大給的HR定義
+從計算"方法的HR"改寫成 計算"session的HR"
+
+Join的邏輯如下:
+
+HR = hit / Total_count
+
+
+#hit
+
+用reclog join weblog => guid2hit (on recomd_id=from_rec)
+
+
+
+#Toal_count
+
+1.reclog join weblog => guid2total (on recomd_id=now_rec)
+
+
+
+把hit和Total_count用guid join起來算HR,只取有uid的,形成一個guid2HR 的table
+
+
+
+
+
