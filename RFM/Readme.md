@@ -1,4 +1,4 @@
-[alt test](https://github.com/VenRaaS/User_Log_History_Tool/blob/master/RFM/RFM_%E7%B5%90%E6%A7%8B%E5%9C%96.jpg)
+![alt test](https://github.com/VenRaaS/User_Log_History_Tool/blob/master/RFM/RFM_%E7%B5%90%E6%A7%8B%E5%9C%96.jpg)
 
 
 程式碼使用說明:
