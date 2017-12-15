@@ -7,7 +7,7 @@
 --
 
 --preparing
-use joshua_453041;
+use u453360;
 
 drop table if exists step_1 ;
 drop table if exists step_2 ;
@@ -34,17 +34,17 @@ create table gohappy_temp_categ as select regexp_replace(category_name,"\\\\",""
 
 --2-2.與goods的table join,提取3樣東西,分別是當前頁面的 (1)商品名稱 (2)商品img_url (3)商品價格
 --## hint: gid為null和not null的分開算,再用union把他們合起來,而且要在null的table中加一行空白的column--
-create table step_2 as select t1.*,t2.goods_img_url as current_img_url,t2.goods_name as current_goods_name,int(t2.goods_price) as current_price from joshua_453041.step_1 as t1 left join joshua_453041.gohappy_temp_goods as t2 on t1.gid=t2.gid where t1.gid is not NULL and t1.gid!='' union all select t1.*,'' as current_img_url,'' as current_goods_name,'' as current_goods_price from joshua_453041.step_1 as t1 where t1.gid is NULL or t1.gid='' ;
+create table step_2 as select t1.*,t2.goods_img_url as current_img_url,t2.goods_name as current_goods_name,int(t2.goods_price) as current_price from u453360.step_1 as t1 left join u453360.gohappy_temp_goods as t2 on t1.gid=t2.gid where t1.gid is not NULL and t1.gid!='' union all select t1.*,'' as current_img_url,'' as current_goods_name,NULL as current_goods_price from u453360.step_1 as t1 where t1.gid is NULL or t1.gid='' ;
 
 --3.與category的table join,提取 (1)分類頁的名稱 (方法同上)--
-create table step_3 as select t1.*,t2.category_name as categ_name from joshua_453041.step_2 as t1 left join joshua_453041.gohappy_temp_categ as t2 on t1.categ_code=t2.category_code where t1.categ_code is not NULL and t1.categ_code!='' union all select t1.*,'' as categ_name from joshua_453041.step_2 as t1 where t1.categ_code is NULL or t1.categ_code='';
+create table step_3 as select t1.*,t2.category_name as categ_name from u453360.step_2 as t1 left join u453360.gohappy_temp_categ as t2 on t1.categ_code=t2.category_code where t1.categ_code is not NULL and t1.categ_code!='' union all select t1.*,'' as categ_name from u453360.step_2 as t1 where t1.categ_code is NULL or t1.categ_code='';
 
 --4.加上ven_guid的index(因為有些ven_guid有斜線,若放到URL會無法讀取,因此用u_index取代)
-create table step_4 as select t1.*,t2.u_index from joshua_453041.step_3 AS t1 JOIN (SELECT ven_guid,row_number() over() as u_index from joshua_453041.step_3 where ven_guid!='' GROUP BY ven_guid) AS t2 ON (t1.ven_guid = t2.ven_guid);
+create table step_4 as select t1.*,t2.u_index from u453360.step_3 AS t1 JOIN (SELECT ven_guid,row_number() over() as u_index from u453360.step_3 where ven_guid!='' GROUP BY ven_guid) AS t2 ON (t1.ven_guid = t2.ven_guid);
 
 --FINAL:排序成好觀察的樣子--(用${hiveconf: .... }去接上面傳入的變數)
 drop table if exists RGs_gohappy_${hiveconf:YEAR}${hiveconf:MONTH}${hiveconf:DATE};
-create table RGs_gohappy_${hiveconf:YEAR}${hiveconf:MONTH}${hiveconf:DATE} as select distinct * from joshua_453041.step_4 order by ven_guid,ven_session,rec_id,api_logtime;
+create table RGs_gohappy_${hiveconf:YEAR}${hiveconf:MONTH}${hiveconf:DATE} as select distinct * from u453360.step_4 order by ven_guid,ven_session,rec_id,api_logtime;
 
 --drop all table which is not needed.--
 drop table step_1;
